@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./src/style.css" />
+    <title>Net Practice</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="heading text-2xl font-semibold">
+        <h2>Net Practice</h2>
+      </div>
+      <div
+        class="card bg-gray-100 rounded-md h-auto w-[300px] sm:w-[380px] md:w-[600px] p-8 flex flex-col gap-4 transition-all hover:shadow-lg"
+      >
+        <div id="numOfOvers">
+          <select
+            name="numOfOvers"
+            class="block w-full p-2 text-sm text-gray-900 border border-black rounded-lg bg-transparent focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-400"
+          >
+            <option value="0">Select number of overs</option>
+            <option value="1">Super Over</option>
+            <option value="2">2</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div
+          class="flex justify-between flex-col-reverse md:flex-row-reverse text-lg"
+          id="overDetails"
+        ></div>
+        <div id="ballOptions" class="flex gap-4 justify-center items-center">
+          <button
+            disabled
+            class="border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center"
+          >
+            W
+          </button>
+          <button
+            disabled
+            class="border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center"
+          >
+            6
+          </button>
+          <button
+            disabled
+            class="border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center"
+          >
+            4
+          </button>
+          <button
+            disabled
+            class="border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center"
+          >
+            3
+          </button>
+          <button
+            disabled
+            class="border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center"
+          >
+            2
+          </button>
+          <button
+            disabled
+            class="border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center"
+          >
+            1
+          </button>
+          <button
+            disabled
+            class="border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center"
+          >
+            0
+          </button>
+        </div>
+        <div id="controls" class="flex justify-evenly">
+          <button
+            id="startMatch"
+            class="disabled:bg-slate-500 border rounded-lg bg-yellow-400 p-1 text-white"
+          >
+            Start Match
+          </button>
+          <button
+            id="newBall"
+            class="disabled:bg-slate-500 border rounded-lg bg-blue-400 p-1 text-white"
+          >
+            New Ball
+          </button>
+          <button
+            id="endGame"
+            class="disabled:bg-slate-500 border rounded-lg bg-red-400 p-1 text-white"
+          >
+            End Game
+          </button>
+        </div>
+        <div class="flex justify-between text-lg" id="teamDetails"></div>
+        <div id="winner" class="text-2xl bg-slate-700 text-white rounded-md">
+          <h2>Team 1 is the winner</h2>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
