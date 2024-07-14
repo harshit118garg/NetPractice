@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let team2WicketsDown: number = 0;
   let team1ScorePerOver = new Array<string>(numOfOvers);
   let team2ScorePerOver = new Array<string>(numOfOvers);
+  let team1Inings = true;
+  let team2Inings = false;
 
   /* ------------------------------------------------------- */
 
@@ -85,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("select number of overs first");
     } else {
       console.log("game start");
+      console.log("team 1 inings start");
       startMatchBtn.disabled = true;
       newBallBtn.disabled = false;
       endGameBtn.disabled = false;
@@ -95,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   newBallBtn.addEventListener("click", () => {
     overDetails.classList.remove("hidden");
-    numberOfBallsThrown++;
+    // numberOfBallsThrown++;
     if (numberOfBallsThrown <= numberOfBalls) {
       const perBallScore = perBall();
       if (perBallScore !== "W") team1Score += +perBallScore;
@@ -103,15 +106,30 @@ document.addEventListener("DOMContentLoaded", function () {
       overDetailsHead.innerText = `Score - ${team1Score}/${team1WicketsDown}`;
       populatePerBall(perBallScore);
 
-      if (numberOfBallsThrown === 6) {
+      if (numberOfBallsThrown === 6 && numberOfBallsThrown !== numberOfBalls) {
         console.log("an over has finished");
         perBallContainer.innerHTML = "";
+        team1ScorePerOver.push(`${team1Score}/${team1WicketsDown}`);
         teamDetails.classList.remove("hidden");
+        numberOfBallsThrown = 0;
       }
-    } else {
-      alert(`over finished`);
+      populateTeamDetails();
+      numberOfBallsThrown++;
+    } else if (numberOfBallsThrown > numberOfBalls) {
+      // alert(`over finished`);
+      console.log("team 1 inings finished");
+      numberOfBallsThrown = 0;
+      console.log("team 2 inings started");
     }
   });
+
+  const populateTeamDetails = () => {
+    team1ScorePerOver.map((scr, i) => {
+      const perOver = document.createElement("p");
+      perOver.innerText = `Over ${i + 1} = ${scr}`;
+      team1Details.appendChild(perOver);
+    });
+  };
 
   const populatePerBall = (perBallScore: string) => {
     // console.log("perBallScore", perBallScore);
