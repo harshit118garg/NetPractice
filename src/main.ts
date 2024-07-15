@@ -118,24 +118,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       numberOfBallsThrown++;
     } else {
-      alert("team 2 innings start");
+      console.warn("team 2 innings start");
     }
   });
-
-  function throwNewBall() {
-    const perBallScore = newBall();
-    if (currentPlayer === 1) {
-      if (perBallScore !== "W") team1Score += +perBallScore;
-      else team1WicketsDown++;
-      overDetailsHead.innerText = `Score - ${team1Score}/${team1WicketsDown}`;
-    } else {
-      if (perBallScore !== "W") team2Score += +perBallScore;
-      else team2WicketsDown++;
-      overDetailsHead.innerText = `Score - ${team2Score}/${team2WicketsDown}`;
-    }
-    populatePerBall(perBallScore);
-    // numberOfOversThrown++;
-  }
 
   const populatePerBall = (perBallScore: string) => {
     // console.log("perBallScore", perBallScore);
@@ -145,16 +130,48 @@ document.addEventListener("DOMContentLoaded", function () {
     perBallContainer.appendChild(scoreSpan);
   };
 
+  function throwNewBall() {
+    const perBallScore = newBall();
+    const isTeam1 = currentPlayer === 1;
+
+    const score = isTeam1 ? team1Score : team2Score;
+    const wickets = isTeam1 ? team1WicketsDown : team2WicketsDown;
+
+    const updatedScore = perBallScore !== "W" ? score + +perBallScore : score;
+    const updatedWickets = perBallScore === "W" ? wickets + 1 : wickets;
+
+    if (isTeam1) {
+      team1Score = updatedScore;
+      team1WicketsDown = updatedWickets;
+    } else {
+      team2Score = updatedScore;
+      team2WicketsDown = updatedWickets;
+    }
+
+    overDetailsHead.innerText = `Score - ${updatedScore}/${updatedWickets}`;
+    populatePerBall(perBallScore);
+  }
+
   const populateDashBoard = (currentPlayer: number) => {
     perBallContainer.innerHTML = "";
+
+    const { score, wickets, teamDetailsDiv } =
+      currentPlayer === 1
+        ? {
+            score: team1Score,
+            wickets: team1WicketsDown,
+            teamDetailsDiv: team1Details,
+          }
+        : {
+            score: team2Score,
+            wickets: team2WicketsDown,
+            teamDetailsDiv: team2Details,
+          };
+
     const perOver = document.createElement("p");
-    if (currentPlayer === 1) {
-      perOver.innerText = `Over = ${team1Score}/${team1WicketsDown}`;
-      team1Details.appendChild(perOver);
-    } else {
-      perOver.innerText = `Over = ${team2Score}/${team2WicketsDown}`;
-      team2Details.appendChild(perOver);
-    }
+    perOver.innerText = `Over = ${score}/${wickets}`;
+    teamDetailsDiv.appendChild(perOver);
+
     teamDetails.classList.remove("hidden");
   };
 
