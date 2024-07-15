@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let team2WicketsDown: number = 0;
   let team1ScorePerOver = new Array<string>(numOfOvers);
   let team2ScorePerOver = new Array<string>(numOfOvers);
-  let team1Inings = true;
-  let team2Inings = false;
+  let currentPlayer: number = 0;
+  let count = 0;
 
   /* ------------------------------------------------------- */
 
@@ -87,49 +87,55 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("select number of overs first");
     } else {
       console.log("game start");
+      currentPlayer++;
       console.log("team 1 inings start");
       startMatchBtn.disabled = true;
       newBallBtn.disabled = false;
       endGameBtn.disabled = false;
 
       overDetails.appendChild(overDetailsHead);
+      overDetails.classList.remove("hidden");
     }
   }
 
   newBallBtn.addEventListener("click", () => {
-    overDetails.classList.remove("hidden");
-    // numberOfBallsThrown++;
-    if (numberOfBallsThrown <= numberOfBalls) {
-      const perBallScore = perBall();
-      if (perBallScore !== "W") team1Score += +perBallScore;
-      else team1WicketsDown++;
-      overDetailsHead.innerText = `Score - ${team1Score}/${team1WicketsDown}`;
-      populatePerBall(perBallScore);
-
-      if (numberOfBallsThrown === 6 && numberOfBallsThrown !== numberOfBalls) {
-        console.log("an over has finished");
-        perBallContainer.innerHTML = "";
-        team1ScorePerOver.push(`${team1Score}/${team1WicketsDown}`);
-        teamDetails.classList.remove("hidden");
+    if (currentPlayer !== 2) {
+      // team 1 inings
+      if (numberOfBallsThrown < 6) {
+        console.log(`throw ${count} over`);
+        throwNewBall();
+      } else if (numberOfBallsThrown === 6 && count !== numOfOvers - 1) {
+        console.log("an over of an innings has finished");
+        console.log(`throw ${count} over`);
+        count++;
+        throwNewBall();
+        populateDashBoard(currentPlayer);
         numberOfBallsThrown = 0;
+      } else {
+        console.log("currentPlayer " + currentPlayer + " innings has finished");
+        populateDashBoard(currentPlayer);
+        currentPlayer++;
       }
-      populateTeamDetails();
       numberOfBallsThrown++;
-    } else if (numberOfBallsThrown > numberOfBalls) {
-      // alert(`over finished`);
-      console.log("team 1 inings finished");
-      numberOfBallsThrown = 0;
-      console.log("team 2 inings started");
+    } else {
+      alert("team 2 innings start");
     }
   });
 
-  const populateTeamDetails = () => {
-    team1ScorePerOver.map((scr, i) => {
-      const perOver = document.createElement("p");
-      perOver.innerText = `Over ${i + 1} = ${scr}`;
-      team1Details.appendChild(perOver);
-    });
-  };
+  function throwNewBall() {
+    const perBallScore = newBall();
+    if (currentPlayer === 1) {
+      if (perBallScore !== "W") team1Score += +perBallScore;
+      else team1WicketsDown++;
+      overDetailsHead.innerText = `Score - ${team1Score}/${team1WicketsDown}`;
+    } else {
+      if (perBallScore !== "W") team2Score += +perBallScore;
+      else team2WicketsDown++;
+      overDetailsHead.innerText = `Score - ${team2Score}/${team2WicketsDown}`;
+    }
+    populatePerBall(perBallScore);
+    // numberOfOversThrown++;
+  }
 
   const populatePerBall = (perBallScore: string) => {
     // console.log("perBallScore", perBallScore);
@@ -139,7 +145,19 @@ document.addEventListener("DOMContentLoaded", function () {
     perBallContainer.appendChild(scoreSpan);
   };
 
-  const perBall = () => {
-    return ballsOptions[Math.floor(Math.random() * ballsOptions.length)];
+  const populateDashBoard = (currentPlayer: number) => {
+    perBallContainer.innerHTML = "";
+    const perOver = document.createElement("p");
+    if (currentPlayer === 1) {
+      perOver.innerText = `Over = ${team1Score}/${team1WicketsDown}`;
+      team1Details.appendChild(perOver);
+    } else {
+      perOver.innerText = `Over = ${team2Score}/${team2WicketsDown}`;
+      team2Details.appendChild(perOver);
+    }
+    teamDetails.classList.remove("hidden");
   };
+
+  const newBall = () =>
+    ballsOptions[Math.floor(Math.random() * ballsOptions.length)];
 });
