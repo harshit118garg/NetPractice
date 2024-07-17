@@ -99,6 +99,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   newBallBtn.addEventListener("click", () => {
+    if (currentPlayer === 3) {
+      alert("match has ended");
+      return;
+    }
+
     if (currentPlayer !== 2) {
       // team 1 inings
       if (numberOfBallsThrown < 6) {
@@ -115,10 +120,28 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("currentPlayer " + currentPlayer + " innings has finished");
         populateDashBoard(currentPlayer);
         currentPlayer++;
+        numberOfBallsThrown = 0;
       }
       numberOfBallsThrown++;
     } else {
-      console.warn("team 2 innings start");
+      count = 0;
+      if (numberOfBallsThrown < 6) {
+        console.log(`throw ${count} over`);
+        throwNewBall();
+      } else if (numberOfBallsThrown === 6 && count !== numOfOvers - 1) {
+        console.log("an over of an innings has finished");
+        console.log(`throw ${count} over`);
+        count++;
+        throwNewBall();
+        populateDashBoard(currentPlayer);
+        numberOfBallsThrown = 0;
+      } else {
+        console.log("currentPlayer " + currentPlayer + " innings has finished");
+        populateDashBoard(currentPlayer);
+        currentPlayer++;
+        numberOfBallsThrown = 0;
+      }
+      numberOfBallsThrown++;
     }
   });
 
