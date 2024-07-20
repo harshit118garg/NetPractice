@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   /* getting all the necessary elements from the DOM */
+  const ballOptionsContainer = document.getElementById(
+    "ballOptions"
+  ) as HTMLDivElement;
   const newBallBtn = document.getElementById("newBall") as HTMLButtonElement;
   const endGameBtn = document.getElementById("endGame") as HTMLButtonElement;
   const startMatchBtn = document.getElementById(
@@ -11,10 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const oversSelect = document.querySelector(
     "#numOfOvers select"
   ) as HTMLSelectElement;
+
   /* ------------------------------------------------------- */
 
   /* hiding and diabling the unecessary elements and buttons at start */
-
   newBallBtn.disabled = true;
   endGameBtn.disabled = true;
   winner.classList.add("hidden");
@@ -28,17 +31,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* ------------------------------------------------------- */
 
+  /* populate necessary ball options html */
+  ballsOptions.forEach((ballOption) => {
+    let ballBtn = document.createElement("button") as HTMLButtonElement;
+    ballBtn.disabled = true;
+    ballBtn.className += `border rounded-md text-center border-cyan-700 bg-white p-1 w-8 flex items-center justify-center`;
+    ballBtn.innerText = ballOption;
+
+    ballOptionsContainer.appendChild(ballBtn);
+  });
+
+  /* ------------------------------------------------------- */
+
   /* creating necessary state variables */
   let numOfOvers: number = 0;
-  let numberOfOversThrown: number = 0;
   let numberOfBalls: number = 0;
   let numberOfBallsThrown: number = 0;
   let team1Score: number = 0;
   let team2Score: number = 0;
   let team1WicketsDown: number = 0;
   let team2WicketsDown: number = 0;
-  let team1ScorePerOver = new Array<string>(numOfOvers);
-  let team2ScorePerOver = new Array<string>(numOfOvers);
   let currentPlayer: number = 0;
   let count = 0;
 
@@ -66,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
   team2Details.appendChild(team2Head);
   teamDetails.appendChild(team1Details);
   teamDetails.appendChild(team2Details);
+
   /* ------------------------------------------------------- */
 
   /* getting the over value */
@@ -79,6 +92,8 @@ document.addEventListener("DOMContentLoaded", function () {
       oversSelect.disabled = true;
     }
   });
+
+  /* ------------------------------------------------------- */
 
   startMatchBtn.addEventListener("click", startGame);
 
@@ -104,45 +119,27 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (currentPlayer !== 2) {
-      // team 1 inings
-      if (numberOfBallsThrown < 6) {
-        console.log(`throw ${count} over`);
-        throwNewBall();
-      } else if (numberOfBallsThrown === 6 && count !== numOfOvers - 1) {
-        console.log("an over of an innings has finished");
-        console.log(`throw ${count} over`);
-        count++;
-        throwNewBall();
-        populateDashBoard(currentPlayer);
-        numberOfBallsThrown = 0;
-      } else {
-        console.log("currentPlayer " + currentPlayer + " innings has finished");
-        populateDashBoard(currentPlayer);
-        currentPlayer++;
-        numberOfBallsThrown = 0;
-      }
-      numberOfBallsThrown++;
-    } else {
+    if (currentPlayer === 2) {
       count = 0;
-      if (numberOfBallsThrown < 6) {
-        console.log(`throw ${count} over`);
-        throwNewBall();
-      } else if (numberOfBallsThrown === 6 && count !== numOfOvers - 1) {
-        console.log("an over of an innings has finished");
-        console.log(`throw ${count} over`);
-        count++;
-        throwNewBall();
-        populateDashBoard(currentPlayer);
-        numberOfBallsThrown = 0;
-      } else {
-        console.log("currentPlayer " + currentPlayer + " innings has finished");
-        populateDashBoard(currentPlayer);
-        currentPlayer++;
-        numberOfBallsThrown = 0;
-      }
-      numberOfBallsThrown++;
     }
+
+    if (numberOfBallsThrown < 6) {
+      console.log(`throw ${count} over`);
+      throwNewBall();
+    } else if (numberOfBallsThrown === 6 && count !== numOfOvers - 1) {
+      console.log("an over of an innings has finished");
+      console.log(`throw ${count} over`);
+      count++;
+      throwNewBall();
+      populateDashBoard(currentPlayer);
+      numberOfBallsThrown = 0;
+    } else {
+      console.log("currentPlayer " + currentPlayer + " innings has finished");
+      populateDashBoard(currentPlayer);
+      currentPlayer++;
+      numberOfBallsThrown = 0;
+    }
+    numberOfBallsThrown++;
   });
 
   const populatePerBall = (perBallScore: string) => {
